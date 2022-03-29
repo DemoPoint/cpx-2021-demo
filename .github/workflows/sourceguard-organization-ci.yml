@@ -1,0 +1,26 @@
+name: SourceGuard organization Scan
+on:
+  push:
+      branches: 
+        - '**'
+  pull_request:
+      branches:
+         - '**'
+  schedule:
+    - cron: "*/6 0 * * *"
+  workflow_dispatch:
+jobs:
+  code-analysis:
+    runs-on: ubuntu-latest
+    container:
+      image: sourceguard/sourceguard-cli
+    env:
+      SG_CLIENT_ID: ${{ secrets.SG_CLIENT_ID }}
+      SG_SECRET_KEY: ${{ secrets.SG_SECRET_KEY }}
+    steps:        
+      - name: Checkout
+        uses: actions/checkout@v2
+        
+      - name: Running SourceGuard code analysis
+        continue-on-error: true
+        run: /sourceguard-cli --source ./
